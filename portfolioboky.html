@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISUALS — Creative Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ✏️ แก้สีหลักที่นี่ เปลี่ยนได้เลย
+   ============================================================ */
+:root {
+  --accent: #c8ff00;       /* ✏️ สีไฮไลต์ — เปลี่ยนเป็นสีอื่นได้ */
+  --bg: #0d0d0d;           /* ✏️ พื้นหลังเข้ม */
+  --surface: #171717;      /* ✏️ พื้นผิวการ์ด */
+  --border: #2a2a2a;       /* ✏️ เส้นขอบ */
+  --text: #f0f0f0;         /* ✏️ สีข้อความหลัก */
+  --muted: #888;           /* ✏️ สีข้อความรอง */
+  --ff: 'Space Grotesk', sans-serif;
+  --fm: 'Space Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   CURSOR CUSTOM
+   ============================================================ */
+body { cursor: none; }
+
+#cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform .1s, width .2s, height .2s;
+  mix-blend-mode: difference;
+}
+
+#cursor.big {
+  width: 48px;
+  height: 48px;
+}
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .6s, visibility .6s;
+}
+
+#loader.hidden { opacity: 0; visibility: hidden; }
+
+.loader-text {
+  font-family: var(--fm);
+  font-size: clamp(24px, 5vw, 48px);
+  color: var(--accent);
+  letter-spacing: 4px;
+  overflow: hidden;
+}
+
+.loader-bar {
+  width: 200px;
+  height: 2px;
+  background: var(--border);
+  margin-top: 16px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loader-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  animation: loadfill 1.4s ease forwards;
+}
+
+@keyframes loadfill { to { width: 100%; } }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s, backdrop-filter .3s, background .3s;
+}
+
+nav.scrolled {
+  border-color: var(--border);
+  backdrop-filter: blur(12px);
+  background: rgba(13,13,13,.8);
+}
+
+.nav-logo {
+  font-family: var(--fm);
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 2px;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 40px;
+  font-family: var(--fm);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: none;
+  letter-spacing: 1px;
+  transition: transform .2s, opacity .2s;
+}
+
+.nav-btn:hover { transform: scale(1.05); opacity: .9; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 40px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-tag {
+  font-family: var(--fm);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeup .6s .2s forwards;
+}
+
+.hero-title {
+  font-size: clamp(48px, 10vw, 120px);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeup .7s .35s forwards;
+}
+
+.hero-title .line2 {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text);  /* ✏️ ข้อความเส้นกรอบ */
+}
+
+.hero-title .accent { color: var(--accent); }
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 400px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeup .7s .5s forwards;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  opacity: 0;
+  animation: fadeup .7s .65s forwards;
+  flex-wrap: wrap;
+}
+
+.btn-main {
+  background: var(--accent);
+  color: #000;
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 40px;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: transform .2s;
+}
+
+.btn-main:hover { transform: scale(1.04); }
+
+.btn-ghost {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px;
+  transition: color .2s, border-color .2s;
+}
+
+.btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+/* floating badge */
+.hero-badge {
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 160px;
+  height: 160px;
+  opacity: 0;
+  animation: fadein .8s .9s forwards, spin 20s linear infinite;
+}
+
+@keyframes fadein { to { opacity: 1; } }
+@keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+.hero-badge svg { width: 100%; height: 100%; }
+
+/* scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: var(--fm);
+  opacity: 0;
+  animation: fadeup .6s 1s forwards;
+}
+
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+  animation: scrollpulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollpulse {
+  0%, 100% { width: 40px; opacity: 1; }
+  50% { width: 80px; opacity: .5; }
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+.marquee-wrap {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+.marquee-track:hover { animation-play-state: paused; }
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 32px;
+  font-family: var(--fm);
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.marquee-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ============================================================
+   WORK SECTION
+   ============================================================ */
+.section { padding: 100px 40px; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 60px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.section-eyebrow {
+  font-family: var(--fm);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+/* filter tabs */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--fm);
+  font-size: 11px;
+  padding: 7px 18px;
+  border-radius: 40px;
+  cursor: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all .2s;
+}
+
+.filter-tab.active, .filter-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* project grid */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: none;
+  transition: border-color .3s, transform .3s;
+  position: relative;
+}
+
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-6px);
+}
+
+/* thumbnail area */
+.project-thumb {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-size: 64px;
+  letter-spacing: -4px;
+  font-weight: 700;
+}
+
+.project-card:hover .thumb-overlay { opacity: 1; }
+
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(200, 255, 0, .08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .3s;
+  font-size: 13px;
+  font-family: var(--fm);
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.project-info { padding: 24px; }
+
+.project-cat {
+  font-family: var(--fm);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.project-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.project-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ============================================================
+   SKILLS SECTION
+   ============================================================ */
+.skills-section { background: var(--surface); }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 60px;
+}
+
+.skill-cell {
+  padding: 32px 28px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transition: background .3s;
+  cursor: none;
+}
+
+.skill-cell:hover { background: rgba(200,255,0,.04); }
+
+.skill-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.skill-name {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.skill-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* skill bar */
+.skill-bar {
+  margin-top: 12px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* ============================================================
+   ABOUT / PROFILE
+   ============================================================ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+@media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+
+.about-avatar-wrap { position: relative; }
+
+.about-avatar {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ใส่รูปจริงด้วย background-image */
+.about-avatar.has-photo {
+  background-size: cover;
+  background-position: center;
+  font-size: 0;
+}
+
+.avatar-label {
+  position: absolute;
+  bottom: -16px;
+  right: -16px;
+  background: var(--accent);
+  color: #000;
+  font-family: var(--fm);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.about-content h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 24px;
+  line-height: 1.1;
+}
+
+.about-content h2 span { color: var(--accent); }
+
+.about-content p {
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.about-stat {
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+}
+
+.about-stat-num {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: var(--fm);
+  color: var(--text);
+}
+
+.about-stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-section {
+  background: var(--surface);
+  text-align: center;
+}
+
+.contact-big {
+  font-size: clamp(32px, 7vw, 80px);
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 40px;
+}
+
+.contact-big span { color: var(--accent); }
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  padding: 14px 28px;
+  border-radius: 40px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: all .25s;
+}
+
+.contact-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 30px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--fm);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeup {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   NOISE TEXTURE OVERLAY (subtle)
+   ============================================================ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: .4;
+  z-index: 9997;
+}
+
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .hero { padding: 100px 20px 60px; }
+  .hero-badge { display: none; }
+  .section { padding: 60px 20px; }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- cursor -->
+<div id="cursor"></div>
+
+<!-- loader -->
+<div id="loader">
+  <div style="text-align:center">
+    <div class="loader-text" id="loader-text">LOADING</div>  <!-- ✏️ ข้อความ loader -->
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     NAV — ✏️ แก้ชื่อโลโก้และเมนู
+     ============================================================ -->
+<nav id="navbar">
+  <a class="nav-logo" href="#">VIS<span>.</span>UAL</a>  <!-- ✏️ ชื่อโลโก้ -->
+  <ul class="nav-links">
+    <li><a href="#work">ผลงาน</a></li>
+    <li><a href="#skills">ทักษะ</a></li>
+    <li><a href="#about">เกี่ยวกับ</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+    HIRE ME
+  </button>
+</nav>
+
+
+<!-- ============================================================
+     HERO — ✏️ แก้ชื่อ, คำอธิบาย, ปุ่ม
+     ============================================================ -->
+<section class="hero">
+  <p class="hero-tag">— Creative Portfolio 2025</p>  <!-- ✏️ -->
+
+  <h1 class="hero-title">
+    <span class="line1">CREATIVE</span><br>
+    <span class="line2">DESIGNER</span><br>  <!-- ✏️ ชื่อหรือตำแหน่ง -->
+    <span class="line1">& <span class="accent">EDITOR</span></span>
+  </h1>
+
+  <p class="hero-sub">
+    ออกแบบและตัดต่อที่บอกเล่าเรื่องราว ทุกเฟรมมีความหมาย ทุกพิกเซลมีเหตุผล
+  </p>  <!-- ✏️ คำอธิบายตัวเอง -->
+
+  <div class="hero-cta">
+    <a href="#work" class="btn-main">ดูผลงาน</a>
+    <a href="#about" class="btn-ghost">เกี่ยวกับฉัน →</a>
+  </div>
+
+  <!-- badge หมุน -->
+  <div class="hero-badge" aria-hidden="true">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="circle-text" d="M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"/>
+      </defs>
+      <circle cx="100" cy="100" r="90" stroke="#2a2a2a" stroke-width="1"/>
+      <circle cx="100" cy="100" r="75" stroke="#c8ff00" stroke-width="0.5" stroke-dasharray="4 8"/>
+      <text font-family="'Space Mono', monospace" font-size="11" fill="#c8ff00" letter-spacing="4">
+        <textPath href="#circle-text">AVAILABLE FOR WORK · 2025 · CREATIVE · </textPath>
+      </text>
+      <!-- ✏️ ข้อความตรงกลาง badge -->
+      <text x="100" y="94" text-anchor="middle" font-family="'Space Grotesk'" font-size="20" font-weight="700" fill="#f0f0f0">✦</text>
+      <text x="100" y="114" text-anchor="middle" font-family="'Space Mono'" font-size="9" fill="#888" letter-spacing="2">HIRE</text>
+    </svg>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+
+<!-- ============================================================
+     MARQUEE — ✏️ แก้ข้อความได้เลย
+     ============================================================ -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-track" id="marquee-track">
+    <!-- ข้อความจะถูก duplicate ด้วย JS -->
+    <span class="marquee-item"><span class="marquee-dot"></span> VIDEO EDITING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> MOTION GRAPHICS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> BRAND IDENTITY</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> COLOR GRADING</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> VISUAL DESIGN</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> ADOBE PREMIERE</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> AFTER EFFECTS</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> PHOTOSHOP</span>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     WORK — ✏️ แก้ชื่อผลงาน, หมวด, คำอธิบาย
+     ============================================================ -->
+<section class="section" id="work">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">ผลงาน</p>
+      <h2 class="section-title">Selected Work</h2>
+    </div>
+    <div class="filter-tabs" id="filter-tabs">
+      <button class="filter-tab active" data-filter="all">ทั้งหมด</button>
+      <button class="filter-tab" data-filter="video">วิดีโอ</button>
+      <button class="filter-tab" data-filter="graphic">กราฟิก</button>
+      <button class="filter-tab" data-filter="motion">โมชั่น</button>
+    </div>
+  </div>
+
+  <div class="project-grid reveal" id="project-grid">
+
+    <!-- ✏️ การ์ดผลงานที่ 1 — แก้สี, emoji, ชื่อ, คำอธิบาย, data-cat -->
+    <div class="project-card" data-cat="video">
+     <div class="project-thumb" style="padding:0; height:220px;">
+  <video
+    src="c:\Users\ICT002\OneDrive\Desktop\mywebsite\skybluepixel.mp4"
+    style="width:100%; height:100%; object-fit:cover;"
+    autoplay muted loop>
+  </video>
+</div>
+      <div class="project-info">
+        <p class="project-cat">Video · 2025</p>
+        <h3 class="project-name">Motion</h3>  <!-- ✏️ ชื่อผลงาน -->
+        <p class="project-desc">ตัดต่อ สไตล์ Motion หรือเล่าเรื่องด้วย Premiere Pro</p>
+      </div>
+    </div>
+
+    <!-- ✏️ การ์ดที่ 2 -->
+    <div class="project-card" data-cat="graphic">
+      <div class="project-thumb" style="background:#1a1a1a; color:#ff6b6b; font-size:48px">
+        ⬡⬡⬡
+        <div class="thumb-overlay">VIEW PROJECT</div>
+      </div>
+      <div class="project-info">
+        <p class="project-cat">Graphic · 2024</p>
+        <h3 class="project-name">Brand Identity — Studio X</h3>
+        <p class="project-desc">ออกแบบโลโก้และระบบสี สำหรับสตูดิโอสร้างสรรค์</p>
+      </div>
+    </div>
+
+    <!-- ✏️ การ์ดที่ 3 -->
+    <div class="project-card" data-cat="motion">
+      <div class="project-thumb" style="background:#0d1117; color:#7ee8a2; font-size:56px; font-family:'Space Mono'">
+        [:::]
+        <div class="thumb-overlay">VIEW PROJECT</div>
+      </div>
+      <div class="project-info">
+        <p class="project-cat">Motion · 2024</p>
+        <h3 class="project-name">Motion Graphics — Tech Intro</h3>
+        <p class="project-desc">ทำ intro animation สำหรับ YouTube Channel</p>
+      </div>
+    </div>
+
+    <!-- ✏️ การ์ดที่ 4 -->
+    <div class="project-card" data-cat="video">
+      <div class="project-thumb" style="background:#1c0a0a; color:#ff6b35; font-size:48px">
+        ✦ CF
+        <div class="thumb-overlay">VIEW PROJECT</div>
+      </div>
+      <div class="project-info">
+        <p class="project-cat">Video · 2024</p>
+        <h3 class="project-name">Commercial — Food Brand</h3>
+        <p class="project-desc">ตัดต่อโฆษณา 30 วินาที พร้อม color grading cinematic</p>
+      </div>
+    </div>
+
+    <!-- ✏️ การ์ดที่ 5 -->
+    <div class="project-card" data-cat="graphic">
+      <div class="project-thumb" style="background:#0a0a1a; color:#c8ff00; font-size:40px; font-family:'Space Mono'">
+        POST<br>ER
+        <div class="thumb-overlay">VIEW PROJECT</div>
+      </div>
+      <div class="project-info">
+        <p class="project-cat">Graphic · 2025</p>
+        <h3 class="project-name">Event Poster Series</h3>
+        <p class="project-desc">โปสเตอร์อีเวนต์ดนตรี 5 ชิ้น สไตล์ brutalist</p>
+      </div>
+    </div>
+
+    <!-- ✏️ การ์ดที่ 6 -->
+    <div class="project-card" data-cat="motion">
+      <div class="project-thumb" style="background:#0d0d0d; color:#fff; font-size:52px">
+        ◎ ◉
+        <div class="thumb-overlay">VIEW PROJECT</div>
+      </div>
+      <div class="project-info">
+        <p class="project-cat">Motion · 2025</p>
+        <h3 class="project-name">Kinetic Typography — Campaign</h3>
+        <p class="project-desc">After Effects animation ตัวหนังสือเคลื่อนไหวสำหรับโฆษณา</p>
+      </div>
+    </div>
+
+    <!-- ✏️ คัดลอก .project-card มาวางเพื่อเพิ่มผลงาน -->
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SKILLS — ✏️ แก้ทักษะและเปอร์เซ็นต์
+     ============================================================ -->
+<section class="section skills-section" id="skills">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">ทักษะ</p>
+      <h2 class="section-title reveal">Tools & Skills</h2>
+    </div>
+  </div>
+
+  <div class="skills-grid reveal">
+
+    <!-- ✏️ แก้ icon, ชื่อ, คำอธิบาย, data-pct (0-100) -->
+    <div class="skill-cell">
+      <div class="skill-icon">🎬</div>
+      <div class="skill-name">Premiere Pro</div>
+      <div class="skill-desc">ตัดต่อวิดีโอ multi-cam, color correction</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <div class="skill-icon">✨</div>
+      <div class="skill-name">After Effects</div>
+      <div class="skill-desc">Motion graphics, VFX, kinetic type</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <div class="skill-icon">🎨</div>
+      <div class="skill-name">Photoshop</div>
+      <div class="skill-desc">Retouch, compositing, thumbnail design</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="92"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <div class="skill-icon">📐</div>
+      <div class="skill-name">Illustrator</div>
+      <div class="skill-desc">โลโก้, vector art, brand system</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <div class="skill-icon">🎵</div>
+      <div class="skill-name">Audacity</div>
+      <div class="skill-desc">Music grading, Fusion SFX</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div>
+    </div>
+
+    <div class="skill-cell">
+      <div class="skill-icon">🖥️</div>
+      <div class="skill-name">AI</div>
+      <div class="skill-desc">AI design, prototype, design system</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     ABOUT — ✏️ แก้รูปและข้อความเกี่ยวกับตัวเอง
+     ============================================================ -->
+<section class="section" id="about">
+  <div class="about-grid">
+
+    <div class="about-avatar-wrap reveal">
+      <!-- ✏️ ตัวเลือก A: ใส่รูปจริง — เปลี่ยน background-image เป็น path รูปของคุณ -->
+      <!-- <div class="about-avatar has-photo" style="background-image:url('photo.jpg')"></div> -->
+
+      <!-- ✏️ ตัวเลือก B: ใช้ emoji หรือตัวอักษรแทน -->
+      <div class="about-avatar">🎬</div>
+      <div class="avatar-label">✏️ โบกี้ 2025</div>
+    </div>
+
+    <div class="about-content reveal">
+      <h2>
+        ปรมินทร์<br>โบกี้<span> เรืองสุข</span>  <!-- ✏️ หัวข้อ -->
+      </h2>
+      <!-- ✏️ เรื่องราวของคุณ -->
+      <p>
+        ฉันคือมือตัดต่อและกราฟิกดีไซเนอร์ที่มีประสบการณ์การตัดต่อช่องเล่าเรื่อง
+        ช่องยูทูปเฮฮา ช่องHighlight games และตัดต่อช่องการขายนาฬิกา
+        มีประสบการณ์มากกว่า 4 ปี และสามารถตัดวิดีโอ motion graphic ได้ค่อนข้างชำนาญ
+      </p>
+      <p>
+        เชี่ยวชาญด้านวิดีโอตัดต่อ, motion graphics และการสร้าง visual identity
+        ที่ทำให้แบรนด์ดูน่าจดจำและแตกต่าง
+      </p>
+
+      <div class="about-stats">
+        <!-- ✏️ แก้ตัวเลขและคำอธิบาย -->
+        <div class="about-stat">
+          <div class="about-stat-num">120+</div>
+          <div class="about-stat-label">โปรเจกต์ที่เคยส่งมอบ</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num">4 ปี</div>
+          <div class="about-stat-label">ประสบการณ์</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num">10+</div>
+          <div class="about-stat-label">ทำให้หลายบริษัท</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num">∞</div>
+          <div class="about-stat-label">ไอเดียใหม่</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CONTACT — ✏️ แก้อีเมลและช่องทางติดต่อ
+     ============================================================ -->
+<section class="section contact-section" id="contact">
+  <h2 class="contact-big reveal">
+    Let's make<br>something <span>great.</span>
+  </h2>
+
+  <div class="contact-links reveal">
+    <!-- ✏️ เปลี่ยน href เป็นลิงก์จริง -->
+    <a href="mailto:killarkingha@email.com" class="contact-link">
+      📧 อีเมล
+    </a>
+    <a href="https://www.instagram.com/donqkyxote?igsh=Y3pmcmxtZmh1anBn" class="contact-link" target="_blank">
+      📷 Instagram
+    </a>
+    <a href="https://www.facebook.com/share/1CuXt1VPns/" class="contact-link" target="_blank">
+      📘 Facebook
+    </a>
+    <a href="https://line.me/ti/p/uJCNmuhfrq" class="contact-link" target="_blank">
+      💬 Line
+    </a>
+  </div>
+
+  <p style="color: var(--muted); font-size: 13px; font-family: var(--fm);">
+    ปกติแล้วตอบกลับภายใน 24 ชั่วโมง
+  </p>
+</section>
+
+
+<!-- FOOTER — ✏️ แก้ชื่อและปี -->
+<footer>
+  <span>© 2025 <a href="#">VISUAL STUDIO</a></span>  <!-- ✏️ -->
+  <span>ยินดีที่ได้แสดงผลงาน ❤️</span>
+  <span><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">↑ TOP</a></span>
+</footer>
+
+
+<!-- ============================================================
+     JAVASCRIPT — ไม่ต้องแก้
+     ============================================================ -->
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor')
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px'
+  cursor.style.top  = e.clientY + 'px'
+})
+document.querySelectorAll('a, button, .project-card, .skill-cell, .filter-tab').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'))
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'))
+})
+
+// Loader
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden')
+  }, 1600)
+})
+
+// Navbar scroll
+const navbar = document.getElementById('navbar')
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50)
+})
+
+// Marquee duplicate
+const track = document.getElementById('marquee-track')
+track.innerHTML += track.innerHTML
+
+// Filter tabs
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    const filter = btn.dataset.filter
+    document.querySelectorAll('.project-card').forEach(card => {
+      const match = filter === 'all' || card.dataset.cat === filter
+      card.style.display = match ? '' : 'none'
+    })
+  })
+})
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal')
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible')
+      observer.unobserve(e.target)
+    }
+  })
+}, { threshold: 0.15 })
+reveals.forEach(r => observer.observe(r))
+
+// Skill bars animate on scroll
+const skillFills = document.querySelectorAll('.skill-fill')
+const skillObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.width = e.target.dataset.pct + '%'
+      skillObserver.unobserve(e.target)
+    }
+  })
+}, { threshold: 0.3 })
+skillFills.forEach(f => skillObserver.observe(f))
+</script>
+
+</body>
+</html>
